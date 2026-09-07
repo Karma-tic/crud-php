@@ -3,17 +3,19 @@ require 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
-    $city = trim($_POST['city']);
-    $salary = floatval($_POST['salary']);
+    $email = trim($_POST['email']);
+    $mobile = trim($_POST['mobile']);
+    $status = trim($_POST['status']);
+    $password = trim($_POST['password']);
 
-    if (!empty($name) && !empty($city) && $salary >= 0) {
-        $stmt = $pdo->prepare("INSERT INTO users (name, city, salary) VALUES (?, ?, ?)");
-        $stmt->execute([$name, $city, $salary]);
+    if (!empty($name) && !empty($email) && !empty($password)) {
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, mobile, status, password) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $email, $mobile, $status, $password]);
         
         header("Location: index.php");
         exit;
     } else {
-        $error = "Please fill in all fields correctly.";
+        $error = "Please fill in all required fields.";
     }
 }
 ?>
@@ -30,11 +32,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Name:</label><br>
         <input type="text" name="name" required><br><br>
         
-        <label>City:</label><br>
-        <input type="text" name="city" required><br><br>
-        
-        <label>Salary:</label><br>
-        <input type="number" step="0.01" name="salary" required><br><br>
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Mobile Number:</label><br>
+        <input type="text" name="mobile" required><br><br>
+
+        <label>Status:</label><br>
+        <select name="status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
         
         <button type="submit">Save User</button>
         <a href="index.php">Cancel</a>

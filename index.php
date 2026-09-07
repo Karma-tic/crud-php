@@ -11,7 +11,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>PHP CRUD - Users</title>
     <style>
         body { font-family: sans-serif; margin: 20px; }
-        table { border-collapse: collapse; width: 600px; margin-top: 15px; }
+        table { border-collapse: collapse; width: 800px; margin-top: 15px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background-color: #f4f4f4; }
         a { text-decoration: none; color: blue; }
@@ -26,8 +26,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>City</th>
-            <th>Salary</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
         <?php if(count($users) > 0): ?>
@@ -35,8 +36,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
                 <td><?= $user['id'] ?></td>
                 <td><?= htmlspecialchars($user['name']) ?></td>
-                <td><?= htmlspecialchars($user['city']) ?></td>
-                <td>$<?= number_format($user['salary'], 2) ?></td>
+                <td><?= htmlspecialchars($user['email']) ?></td>
+                <td><?= htmlspecialchars($user['mobile']) ?></td>
+                <td><?= htmlspecialchars($user['status']) ?></td>
                 <td>
                     <a href="update.php?id=<?= $user['id'] ?>">Edit</a> | 
                     <a href="delete.php?id=<?= $user['id'] ?>" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
@@ -44,7 +46,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tr>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="5">No users found.</td></tr>
+            <tr><td colspan="6">No users found.</td></tr>
         <?php endif; ?>
     </table>
 </body>

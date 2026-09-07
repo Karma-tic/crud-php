@@ -1,15 +1,12 @@
 <?php
 require 'db.php';
 
-// Check if ID is provided
 if (!isset($_GET['id'])) {
     header("Location: index.php");
     exit;
 }
 
 $id = $_GET['id'];
-
-// Fetch user data
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -18,20 +15,21 @@ if (!$user) {
     die("User not found.");
 }
 
-// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
-    $city = trim($_POST['city']);
-    $salary = floatval($_POST['salary']);
+    $email = trim($_POST['email']);
+    $mobile = trim($_POST['mobile']);
+    $status = trim($_POST['status']);
+    $password = trim($_POST['password']);
 
-    if (!empty($name) && !empty($city) && $salary >= 0) {
-        $stmt = $pdo->prepare("UPDATE users SET name = ?, city = ?, salary = ? WHERE id = ?");
-        $stmt->execute([$name, $city, $salary, $id]);
+    if (!empty($name) && !empty($email) && !empty($password)) {
+        $stmt = $pdo->prepare("UPDATE users SET name = ?, email = ?, mobile = ?, status = ?, password = ? WHERE id = ?");
+        $stmt->execute([$name, $email, $mobile, $status, $password, $id]);
         
         header("Location: index.php");
         exit;
     } else {
-        $error = "Please fill in all fields correctly.";
+        $error = "Please fill in all required fields.";
     }
 }
 ?>
@@ -48,11 +46,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Name:</label><br>
         <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" required><br><br>
         
-        <label>City:</label><br>
-        <input type="text" name="city" value="<?= htmlspecialchars($user['city']) ?>" required><br><br>
-        
-        <label>Salary:</label><br>
-        <input type="number" step="0.01" name="salary" value="<?= htmlspecialchars($user['salary']) ?>" required><br><br>
+        <label>Email:</label><br>
+        <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required><br><br>
+
+        <label>Mobile Number:</label><br>
+        <input type="text" name="mobile" value="<?= htmlspecialchars($user['mobile']) ?>" required><br><br>
+
+        <label>Status:</label><br>
+        <select name="status">
+            <option value="Active" <?= $user['status'] == 'Active' ? 'selected' : '' ?>>Active</option>
+            <option value="Inactive" <?= $user['status'] == 'Inactive' ? 'selected' : '' ?>>Inactive</option>
+        </select><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" value="<?= htmlspecialchars($user['password']) ?>" required><br><br>
         
         <button type="submit">Update User</button>
         <a href="index.php">Cancel</a>
