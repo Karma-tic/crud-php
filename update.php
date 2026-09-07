@@ -21,16 +21,17 @@ if (!$user) {
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
+    $city = trim($_POST['city']);
+    $salary = floatval($_POST['salary']);
 
-    if (!empty($name) && !empty($email)) {
-        $stmt = $pdo->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
-        $stmt->execute([$name, $email, $id]);
+    if (!empty($name) && !empty($city) && $salary >= 0) {
+        $stmt = $pdo->prepare("UPDATE users SET name = ?, city = ?, salary = ? WHERE id = ?");
+        $stmt->execute([$name, $city, $salary, $id]);
         
         header("Location: index.php");
         exit;
     } else {
-        $error = "Please fill in all fields.";
+        $error = "Please fill in all fields correctly.";
     }
 }
 ?>
@@ -47,8 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Name:</label><br>
         <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" required><br><br>
         
-        <label>Email:</label><br>
-        <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required><br><br>
+        <label>City:</label><br>
+        <input type="text" name="city" value="<?= htmlspecialchars($user['city']) ?>" required><br><br>
+        
+        <label>Salary:</label><br>
+        <input type="number" step="0.01" name="salary" value="<?= htmlspecialchars($user['salary']) ?>" required><br><br>
         
         <button type="submit">Update User</button>
         <a href="index.php">Cancel</a>

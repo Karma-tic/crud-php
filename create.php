@@ -3,16 +3,17 @@ require 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
+    $city = trim($_POST['city']);
+    $salary = floatval($_POST['salary']);
 
-    if (!empty($name) && !empty($email)) {
-        $stmt = $pdo->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
-        $stmt->execute([$name, $email]);
+    if (!empty($name) && !empty($city) && $salary >= 0) {
+        $stmt = $pdo->prepare("INSERT INTO users (name, city, salary) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $city, $salary]);
         
         header("Location: index.php");
         exit;
     } else {
-        $error = "Please fill in all fields.";
+        $error = "Please fill in all fields correctly.";
     }
 }
 ?>
@@ -29,8 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Name:</label><br>
         <input type="text" name="name" required><br><br>
         
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <label>City:</label><br>
+        <input type="text" name="city" required><br><br>
+        
+        <label>Salary:</label><br>
+        <input type="number" step="0.01" name="salary" required><br><br>
         
         <button type="submit">Save User</button>
         <a href="index.php">Cancel</a>
